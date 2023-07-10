@@ -1,24 +1,17 @@
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { BufferAttribute } from "three";
 import { useFrame } from "@react-three/fiber";
 import { handleCompile } from "../../../utils/shaders/utils";
-import { useControls } from "leva";
-
+import { gsap } from "gsap";
 export default function AnimatedTriangles(props) {
 	const sphere = useRef();
 	const mesh = useRef();
-
-	const { u_progress } = useControls({
-		u_progress: { value: 0, min: 0, max: 1, step: 0.01 },
-	});
 
 	useFrame(({ clock, camera }) => {
 		const time = clock.elapsedTime * 0.2;
 		//access shader uniforms through userData
 		if (mesh.current.material.userData.shader !== undefined) {
 			mesh.current.material.userData.shader.uniforms.u_time.value = time;
-			mesh.current.material.userData.shader.uniforms.u_progress.value =
-				u_progress;
 		}
 	});
 
@@ -37,6 +30,17 @@ export default function AnimatedTriangles(props) {
 		sphere.current.setAttribute("aRandom", new BufferAttribute(randoms, 1));
 	}, []);
 
+	useEffect(() => {
+		if (mesh.current) {
+			gsap.to(mesh.current.material.userData.shader.uniforms.u_progress, {
+				value: 1.0,
+				duration: 3,
+				ease: "power2.inOut",
+				yoyo: true,
+				repeat: -1,
+			});
+		}
+	}, []);
 	return (
 		<mesh {...props} castShadow ref={mesh} position={[4, 0, 0]}>
 			<icosahedronGeometry args={[1, 4]} ref={sphere} />

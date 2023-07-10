@@ -3,11 +3,8 @@ import Background from "./scene/Background";
 import Camera from "./scene/Camera";
 import { Room } from "./models/Room";
 
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { useFrame } from "@react-three/fiber";
+import { useRef, useState } from "react";
 import { useScroll } from "@react-three/drei";
-import ShaderCursor from "./scene/ShaderCursor";
 import AnimatedTriangles from "./children/AnimatedTriangles";
 import Effects from "./scene/Effects";
 
